@@ -14,11 +14,15 @@ word_list = words.words()
 
 engine = pyttsx3.init()
 
-url = 'http://127.0.0.1:8090/?transcription='
+urlLipsync = 'http://127.0.0.1:8090/?transcription='
+urlTimedRecsn = 'http://127.0.0.1:8090/timed/recsn?transcription='
+
+async def callTimedRecsnService(transcript, lipsyncjson):
+  return await requests.post(f'{urlTimedRecsn}{transcript}', lipsyncjson)
 
 async def callLipsyncService(transcription, filePath, fileName):
   with open(filePath, 'rb') as f:
-    response = await requests.post(f'{url}{transcription}', files={fileName: f})
+    response = await requests.post(f'{urlLipsync}{transcription}', files={fileName: f})
     f.close()
   return response
 
@@ -47,16 +51,16 @@ async def prepCallToLipsyncService():
           f.close
 
         if (dotLabFile != None and dotWavFile != None):
-          print('I would be doing a call rn')
-          response = None
-          #response = await callLipsyncService(transcription, dotWavFileABSPath, dotWavFile)
+          print('Calling Lipsync service...')
+          response = await callLipsyncService(transcription, dotWavFileABSPath, dotWavFile)
           if (response != None):
             await saveResponse(response)
             print(f'Response was revieced and saved.\n')
           else:
+            print(f'No Response. Error was logged and will be shown at the end of the process.')
             errors.append(f'Response from Lipsync Service was empty. Transcription: {transcription} - {os.path.dirname(dotWavFileABSPath)} - {dotWavFile}')
   except Exception as e:
-    errors.append(f'Getting files in a dir error: {e}')
+    errors.append(f'Error comes from (prepCallToLipsyncService) - {e}')
 
 async def getAllFilesInFolder(folderName):
   files = []
