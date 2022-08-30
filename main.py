@@ -6,7 +6,7 @@ import asyncio
 from nltk.corpus import words
 
 #Uncomment this if you're running for first time.
-#nltk.download('words')
+nltk.download('words')
 
 basePath = os.path.dirname(os.path.abspath(__file__))
 
