@@ -52,3 +52,5 @@ venv2/
 venv3/
 venv.disabled/
 lib.disabled
+
+data
