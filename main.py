@@ -39,6 +39,9 @@ urlTimedRecsn = 'http://127.0.0.1:8090/timed/recsn'
 urlPhones = 'http://127.0.0.1:8090/phones'
 urlRecsn = 'http://127.0.0.1:8080/api/v2/en-GB/ipa/recsn'
 
+global missingTimedRscn
+missingTimedRscn = []
+
 #################
 # Borrowed Code #
 #################
@@ -71,6 +74,7 @@ async def callTimedRscn():
       print(f'Response for TimedRcsn already exists... Skipping to the next call.')
       continue
     else:
+      missingTimedRscn.append(dirName)
       print(f'Calling TimedRcsn service for {transcription}... DO NOT END THIS.')
 
     phones = await getPhones(json, transcription)
@@ -225,7 +229,6 @@ async def createAndSaveAsFile(fileName):
   engine.save_to_file(fileName, f'{fileName}.wav')
   engine.runAndWait()
 
-#Comment out if statement for counter to enable full words amount 25000+
 async def loopAllWordsAndCreateFiles():
   counter = 0
   for word in word_list:
@@ -250,7 +253,6 @@ async def loopAllWordsAndCreateFiles():
     except Exception as e:
       errors.append(f'CreatingAndSaving file error: {e}')
 
-#Uncomment the response line to send requests.
 async def main():
   startTime = time.time()
   global errors
@@ -285,12 +287,13 @@ async def main():
   endTime = (time.time() - startTime) / 60 
   print(f'\nProcess took: {endTime} minutes.')
 
+  if not (len(missingTimedRscn) == 0):
+    for missing in missingTimedRscn:
+      print(f'After Running this file was never generated - {missing}')
+
   if not (len(errors) == 0):
     for error in errors:
       print(f'\nError --> {error}')
 
 if __name__ == '__main__':
   asyncio.run(main())
-  #print(len(word_list))
-  # r = asyncio.run(callTimedRscn())
-  # print(r)
