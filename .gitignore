@@ -54,3 +54,4 @@ venv.disabled/
 lib.disabled
 
 data
+*.zip
