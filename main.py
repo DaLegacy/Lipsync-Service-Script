@@ -66,8 +66,8 @@ async def callTimedRscn():
   for transcription, json in lipsyncJsonAndTranscription:
     dirName = transcription
 
-    # if (counter == 10):
-    #   break
+    if (counter == 10):
+      break
     counter += 1
 
     if (checkIfResponsesExist(f'{dataFolder}/{dirName}', 'T') == True):
@@ -232,8 +232,8 @@ async def createAndSaveAsFile(fileName):
 async def loopAllWordsAndCreateFiles():
   counter = 0
   for word in word_list:
-    # if (counter == 10):
-    #   break
+    if (counter == 10):
+      break
 
     counter += 1
 
